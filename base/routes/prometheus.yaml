@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-prometheus
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: monitoring-kube-prometheus-prometheus
+            port:
+              number: 9090
+        path: /prometheus(/|$)(.*)
+        pathType: ImplementationSpecific

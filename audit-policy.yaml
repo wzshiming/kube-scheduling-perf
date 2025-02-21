@@ -1,0 +1,12 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+omitManagedFields: True
+rules:
+- level: Metadata
+  resources:
+  - group: ""
+    verbs:
+    - create
+    resources:
+    - pods/binding
+    - pods

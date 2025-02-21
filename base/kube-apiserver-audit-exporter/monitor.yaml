@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: monitoring-kube-apiserver-audit-exporter
+  namespace: monitoring
+  labels:
+    component: kube-apiserver-audit-exporter
+    release: monitoring
+spec:
+  endpoints:
+  - port: http
+    interval: 2s
+    scrapeTimeout: 1s
+    honorLabels: true
+    path: /metrics
+    scheme: http
+  jobLabel: component
+  selector:
+    matchLabels:
+      component: kube-apiserver-audit-exporter
+  namespaceSelector:
+    matchNames:
+    - kube-system
