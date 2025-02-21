@@ -42,9 +42,16 @@ delete-coscheduling:
 
 create-kueue:
 	kubectl create -k ./schedulers/kueue
+	kubectl wait --namespace kueue-system \
+		--for=condition=ready pod \
+		--selector=app.kubernetes.io/component=controller \
+		--timeout=90s
 
 delete-kueue:
 	kubectl delete -k ./schedulers/kueue
+
+test-kueue:
+	go test -timeout 300s -run ^TestKueue . -v
 
 create-volcano:
 	kubectl create -k ./schedulers/volcano
@@ -52,8 +59,14 @@ create-volcano:
 delete-volcano:
 	kubectl delete -k ./schedulers/volcano
 
+test-volcano:
+	go test -timeout 300s -run ^TestVolcano . -v
+
 create-yunikorn:
 	kubectl create -k ./schedulers/yunikorn
 
 delete-yunikorn:
 	kubectl delete -k ./schedulers/yunikorn
+
+test-yunikorn:
+	go test -timeout 300s -run ^TestYunikorn . -v

@@ -4,3 +4,12 @@ kind: Kustomization
 resources:
 - deploy.yaml
 - monitor.yaml
+
+configMapGenerator:
+- name: audit-exporter
+  files:
+  - audit-exporter.json
+  options:
+    annotations:
+    labels:
+      grafana_dashboard: "1"

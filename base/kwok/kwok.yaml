@@ -2407,4 +2407,5 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 2
       restartPolicy: Always
+      hostNetwork: true
       serviceAccountName: kwok-controller
