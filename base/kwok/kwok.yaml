@@ -2376,7 +2376,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        image: m.daocloud.io/registry.k8s.io/kwok/kwok:v0.6.1
+        image: kind-registry:5000/registry.k8s.io/kwok/kwok:v0.6.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 10

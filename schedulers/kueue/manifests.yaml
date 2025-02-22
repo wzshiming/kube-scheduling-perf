@@ -11789,7 +11789,7 @@ spec:
         - --zap-log-level=2
         command:
         - /manager
-        image: m.daocloud.io/registry.k8s.io/kueue/kueue:v0.10.1
+        image: kind-registry:5000/registry.k8s.io/kueue/kueue:v0.10.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -11832,7 +11832,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: m.daocloud.io/registry.k8s.io/kubebuilder/kube-rbac-proxy:v0.16.0
+        image: kind-registry:5000/registry.k8s.io/kubebuilder/kube-rbac-proxy:v0.16.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443

@@ -1,8 +1,12 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry]
+    config_path = "/etc/containerd/certs.d"
 nodes:
 - role: control-plane
-  image: m.daocloud.io/docker.io/kindest/node:v1.32.2
+  image: localhost:5001/docker.io/kindest/node:v1.32.2
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -47,3 +51,5 @@ nodes:
   - hostPath: ./audit-policy.yaml
     containerPath: /etc/kubernetes/policies/audit-policy.yaml
     readOnly: true
+  - hostPath: ./logs/
+    containerPath: /var/log/kubernetes/

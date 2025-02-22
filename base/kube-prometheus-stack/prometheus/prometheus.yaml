@@ -23,7 +23,7 @@ spec:
       port: http-web
       pathPrefix: "/"
       apiVersion: v2
-  image: "m.daocloud.io/quay.io/prometheus/prometheus:v3.1.0"
+  image: "kind-registry:5000/quay.io/prometheus/prometheus:v3.1.0"
   version: v3.1.0
   externalUrl: http://monitoring-kube-prometheus-prometheus.monitoring:9090
   paused: false

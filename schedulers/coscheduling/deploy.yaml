@@ -3,23 +3,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: scheduler-plugins-scheduler
-  namespace: default
+  namespace: coscheduling
 ---
 # Source: scheduler-plugins/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: scheduler-plugins-controller
-  namespace: default
----
-# Source: scheduler-plugins/templates/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scheduler-config
-  namespace: default
-data:
-  scheduler-config.yaml: "apiVersion: kubescheduler.config.k8s.io/v1\nkind: KubeSchedulerConfiguration\nleaderElection:\n  leaderElect: false\n  resourceNamespace: default\n  resourceName: scheduler-plugins-scheduler\nprofiles:\n# Compose all plugins in one profile\n- schedulerName: scheduler-plugins-scheduler\n  plugins:\n    multiPoint:\n      enabled:\n      - name: Coscheduling\n      disabled:\n      - name: CapacityScheduling\n      - name: NodeResourceTopologyMatch\n      - name: NodeResourcesAllocatable\n      - name: PrioritySort\n  pluginConfig: \n  - args:\n      permitWaitingTimeSeconds: 10\n    name: Coscheduling\n"
+  namespace: coscheduling
 ---
 # Source: scheduler-plugins/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -139,7 +130,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: scheduler-plugins-scheduler
-  namespace: default
+  namespace: coscheduling
 ---
 # Source: scheduler-plugins/templates/rbac.yaml
 kind: ClusterRoleBinding
@@ -149,7 +140,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: scheduler-plugins-controller
-  namespace: default
+  namespace: coscheduling
 roleRef:
   kind: ClusterRole
   name: scheduler-plugins-controller
@@ -168,17 +159,17 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: scheduler-plugins-scheduler
-  namespace: default
+  namespace: coscheduling
 - kind: ServiceAccount
   name: scheduler-plugins-controller
-  namespace: default
+  namespace: coscheduling
 ---
 # Source: scheduler-plugins/templates/deployment.yaml
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: scheduler-plugins-controller
-  namespace: default
+  namespace: coscheduling
   labels:
     app: scheduler-plugins-controller
 spec:
@@ -194,7 +185,7 @@ spec:
       serviceAccountName: scheduler-plugins-controller
       containers:
       - name: scheduler-plugins-controller
-        image: m.daocloud.io/registry.k8s.io/scheduler-plugins/controller:v0.29.7
+        image: kind-registry:5000/registry.k8s.io/scheduler-plugins/controller:v0.29.7
         imagePullPolicy: IfNotPresent
 ---
 # Source: scheduler-plugins/templates/deployment.yaml
@@ -204,7 +195,7 @@ metadata:
   labels:
     component: scheduler
   name: scheduler-plugins-scheduler
-  namespace: default
+  namespace: coscheduling
 spec:
   selector:
     matchLabels:
@@ -218,10 +209,10 @@ spec:
       serviceAccountName: scheduler-plugins-scheduler
       containers:
       - command:
-        - /bin/kube-scheduler
+        - /kube-scheduler
         args:
         - --config=/etc/kubernetes/scheduler-config.yaml
-        image: m.daocloud.io/registry.k8s.io/scheduler-plugins/kube-scheduler:v0.29.7
+        image: kind-registry:5000/registry.k8s.io/scheduler-plugins/kube-scheduler:v0.29.7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

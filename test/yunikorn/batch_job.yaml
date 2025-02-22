@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: yunikorn-job-
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 1
+  parallelism: 3
+  completions: 3
+  template:
+    metadata:
+      labels:
+        app: sleep
+        applicationId: "sleep-app"
+        queue: "root.sandbox"
+    spec:
+      schedulerName: yunikorn
+      restartPolicy: Never
+      containers:
+      - name: sleep
+        image: hello-world
+        args:
+        - "30s"
+        resources:
+          requests:
+            cpu: 1
+            memory: "200Mi"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - "kwok"
+      tolerations:
+      - key: "kwok.x-k8s.io/node"
+        operator: "Exists"
+        effect: "NoSchedule"

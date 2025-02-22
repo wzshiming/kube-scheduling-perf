@@ -1,0 +1,11 @@
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: Queue
+metadata:
+  name: test-queue
+  namespace: default
+spec:
+  weight: 1
+  reclaimable: false
+  capability:
+    cpu: 3
+    memory: 600Mi

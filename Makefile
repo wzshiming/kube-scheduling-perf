@@ -1,11 +1,15 @@
 
-up: create-cluster \
+up: \
+	create-registry \
+	create-cluster \
 	create-kube-prometheus-stack \
 	create-kube-apiserver-audit-exporter \
 	create-kwok \
 	create-ingress
 
-down: delete-cluster
+down: \
+	delete-cluster \
+	delete-registry 
 
 create-kube-prometheus-stack:
 	kubectl create -k ./base/kube-prometheus-stack
@@ -24,15 +28,22 @@ create-ingress:
 	kubectl wait --namespace ingress-nginx \
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
-		--timeout=90s
+		--timeout=180s
 
 	kubectl apply -f ./base/routes
 
 create-cluster:
-	kind create cluster --config ./kind.yaml
+	./hack/kind-with-local-registry.sh 
 
 delete-cluster:
 	kind delete cluster
+
+create-registry:
+	./hack/local-registry-with-load-images.sh
+
+delete-registry:
+	docker kill kind-registry
+	docker rm kind-registry
 
 create-coscheduling:
 	kubectl create -k ./schedulers/coscheduling
@@ -45,13 +56,13 @@ create-kueue:
 	kubectl wait --namespace kueue-system \
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
-		--timeout=90s
+		--timeout=180s
 
 delete-kueue:
 	kubectl delete -k ./schedulers/kueue
 
 test-kueue:
-	go test -timeout 300s -run ^TestKueue . -v
+	go test -timeout 300s ./test/kueue -v
 
 create-volcano:
 	kubectl create -k ./schedulers/volcano
@@ -60,7 +71,7 @@ delete-volcano:
 	kubectl delete -k ./schedulers/volcano
 
 test-volcano:
-	go test -timeout 300s -run ^TestVolcano . -v
+	go test -timeout 300s ./test/volcano -v
 
 create-yunikorn:
 	kubectl create -k ./schedulers/yunikorn
@@ -69,4 +80,4 @@ delete-yunikorn:
 	kubectl delete -k ./schedulers/yunikorn
 
 test-yunikorn:
-	go test -timeout 300s -run ^TestYunikorn . -v
+	go test -timeout 300s ./test/yunikorn -v

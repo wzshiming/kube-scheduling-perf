@@ -13,7 +13,7 @@ function format() {
   mapfile -t findfiles < <(find . \( \
     -iname "*.yaml" \
     -o -iname "*.yml" \
-    \) )
+    \))
   go run github.com/google/yamlfmt/cmd/yamlfmt@v0.16.0 -conf .yamlfmt.yaml "${findfiles[@]}"
 }
 

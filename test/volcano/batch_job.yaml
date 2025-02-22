@@ -1,0 +1,40 @@
+apiVersion: batch.volcano.sh/v1alpha1
+kind: Job
+metadata:
+  generateName: volcano-job-
+  namespace: default
+spec:
+  minAvailable: 3
+  schedulerName: volcano
+  queue: test-queue
+  policies:
+  - event: PodEvicted
+    action: RestartJob
+  tasks:
+  - replicas: 3
+    name: task
+    template:
+      spec:
+        restartPolicy: Never
+        containers:
+        - name: sleep
+          image: hello-world
+          args:
+          - "30s"
+          resources:
+            requests:
+              cpu: 1
+              memory: "200Mi"
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: type
+                  operator: In
+                  values:
+                  - "kwok"
+        tolerations:
+        - key: "kwok.x-k8s.io/node"
+          operator: "Exists"
+          effect: "NoSchedule"
