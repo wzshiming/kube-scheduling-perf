@@ -10,6 +10,7 @@ configMapGenerator:
   files:
   - audit-exporter.json
   options:
+    disableNameSuffixHash: true
     annotations:
     labels:
       grafana_dashboard: "1"
