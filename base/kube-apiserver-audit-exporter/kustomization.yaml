@@ -2,15 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- deploy.yaml
-- monitor.yaml
+- kube-apiserver-audit-exporter
 
 configMapGenerator:
 - name: audit-exporter
-  files:
-  - audit-exporter.json
   options:
     disableNameSuffixHash: true
-    annotations:
     labels:
-      grafana_dashboard: "1"
+      "grafana_dashboard": "1"
+  files:
+  - audit-exporter.json

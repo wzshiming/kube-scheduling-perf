@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yunikorn
+    chart: yunikorn-1.6.1
+    heritage: Helm
+    release: yunikorn
+  name: yunikorn-admission-controller
+  namespace: yunikorn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yunikorn
+      component: yunikorn-admission-controller
+      release: yunikorn
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations: null
+      labels:
+        app: yunikorn
+        component: yunikorn-admission-controller
+        release: yunikorn
+      name: yunikorn-admission-controller
+    spec:
+      containers:
+      - env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: GOMEMLIMIT
+          value: 200MiB
+        - name: GOGC
+          value: "100"
+        image: kind-registry:5000/docker.io/apache/yunikorn:admission-1.6.1
+        imagePullPolicy: IfNotPresent
+        name: yunikorn-admission-controller
+        ports:
+        - containerPort: 9089
+          name: webhook-api
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: webhook-api
+            scheme: HTTPS
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /health
+            port: webhook-api
+            scheme: HTTPS
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /run/secrets/webhook
+          name: admission-controller-secrets
+          readOnly: true
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      serviceAccountName: yunikorn-admission-controller
+      volumes:
+      - name: admission-controller-secrets
+        secret:
+          secretName: admission-controller-secrets

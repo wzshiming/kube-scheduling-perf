@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- kueue-system_namespace.yaml
+- kueue-controller-manager_serviceaccount.yaml
+- kueue-leader-election-role_role.yaml
+- kueue-batch-admin-role_clusterrole.yaml
+- kueue-batch-user-role_clusterrole.yaml
+- kueue-clusterqueue-editor-role_clusterrole.yaml
+- kueue-clusterqueue-viewer-role_clusterrole.yaml
+- kueue-job-editor-role_clusterrole.yaml
+- kueue-job-viewer-role_clusterrole.yaml
+- kueue-jobset-editor-role_clusterrole.yaml
+- kueue-jobset-viewer-role_clusterrole.yaml
+- kueue-localqueue-editor-role_clusterrole.yaml
+- kueue-localqueue-viewer-role_clusterrole.yaml
+- kueue-manager-role_clusterrole.yaml
+- kueue-metrics-reader_clusterrole.yaml
+- kueue-mpijob-editor-role_clusterrole.yaml
+- kueue-mpijob-viewer-role_clusterrole.yaml
+- kueue-mxjob-editor-role_clusterrole.yaml
+- kueue-mxjob-viewer-role_clusterrole.yaml
+- kueue-paddlejob-editor-role_clusterrole.yaml
+- kueue-paddlejob-viewer-role_clusterrole.yaml
+- kueue-pending-workloads-cq-viewer-role_clusterrole.yaml
+- kueue-pending-workloads-lq-viewer-role_clusterrole.yaml
+- kueue-proxy-role_clusterrole.yaml
+- kueue-pytorchjob-editor-role_clusterrole.yaml
+- kueue-pytorchjob-viewer-role_clusterrole.yaml
+- kueue-raycluster-editor-role_clusterrole.yaml
+- kueue-raycluster-viewer-role_clusterrole.yaml
+- kueue-rayjob-editor-role_clusterrole.yaml
+- kueue-rayjob-viewer-role_clusterrole.yaml
+- kueue-resourceflavor-editor-role_clusterrole.yaml
+- kueue-resourceflavor-viewer-role_clusterrole.yaml
+- kueue-tfjob-editor-role_clusterrole.yaml
+- kueue-tfjob-viewer-role_clusterrole.yaml
+- kueue-workload-editor-role_clusterrole.yaml
+- kueue-workload-viewer-role_clusterrole.yaml
+- kueue-xgboostjob-editor-role_clusterrole.yaml
+- kueue-xgboostjob-viewer-role_clusterrole.yaml
+- kueue-visibility-server-auth-reader_rolebinding.yaml
+- kueue-leader-election-rolebinding_rolebinding.yaml
+- kueue-manager-rolebinding_clusterrolebinding.yaml
+- kueue-proxy-rolebinding_clusterrolebinding.yaml
+- kueue-controller-manager-metrics-service_service.yaml
+- kueue-visibility-server_service.yaml
+- kueue-webhook-service_service.yaml
+- kueue-controller-manager_deployment.yaml
+- v1beta1.visibility.kueue.x-k8s.io_apiservice.yaml
+- kueue-mutating-webhook-configuration_mutatingwebhookconfiguration.yaml
+- kueue-validating-webhook-configuration_validatingwebhookconfiguration.yaml
+
+configMapGenerator:
+- name: kueue-manager-config
+  namespace: kueue-system
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/component": "controller"
+      "app.kubernetes.io/name": "kueue"
+      "control-plane": "controller-manager"
+  files:
+  - controller_manager_config.yaml
+
+secretGenerator:
+- name: kueue-webhook-server-cert
+  namespace: kueue-system
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "control-plane": "controller-manager"
+      "app.kubernetes.io/component": "controller"
+      "app.kubernetes.io/name": "kueue"
+  files:

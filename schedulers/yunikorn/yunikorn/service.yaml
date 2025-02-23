@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yunikorn
+    chart: yunikorn-1.6.1
+    heritage: Helm
+    release: yunikorn
+  name: yunikorn-service
+  namespace: yunikorn
+spec:
+  ports:
+  - name: yunikorn-core
+    port: 9080
+    protocol: TCP
+    targetPort: http1
+  - name: yunikorn-service
+    port: 9889
+    protocol: TCP
+    targetPort: http2
+  selector:
+    app: yunikorn
+    component: yunikorn-scheduler
+    release: yunikorn
+  type: ClusterIP

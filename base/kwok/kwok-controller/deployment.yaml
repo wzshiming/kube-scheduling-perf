@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kwok-controller
+  name: kwok-controller
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kwok-controller
+  template:
+    metadata:
+      labels:
+        app: kwok-controller
+    spec:
+      containers:
+      - args:
+        - --manage-all-nodes=false
+        - --manage-nodes-with-annotation-selector=kwok.x-k8s.io/node=fake
+        - --manage-nodes-with-label-selector=
+        - --manage-single-node=
+        - --node-ip=$(POD_IP)
+        - --node-port=10247
+        - --cidr=10.0.0.1/24
+        - --node-lease-duration-seconds=40
+        - --enable-crds=Stage
+        - --enable-crds=Metric
+        - --enable-crds=Attach
+        - --enable-crds=ClusterAttach
+        - --enable-crds=Exec
+        - --enable-crds=ClusterExec
+        - --enable-crds=Logs
+        - --enable-crds=ClusterLogs
+        - --enable-crds=PortForward
+        - --enable-crds=ClusterPortForward
+        - --enable-crds=ResourceUsage
+        - --enable-crds=ClusterResourceUsage
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        image: kind-registry:5000/registry.k8s.io/kwok/kwok:v0.6.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz
+            port: 10247
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 10
+        name: kwok-controller
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: 10247
+            scheme: HTTP
+          initialDelaySeconds: 2
+          periodSeconds: 20
+          timeoutSeconds: 2
+        startupProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10247
+            scheme: HTTP
+          initialDelaySeconds: 2
+          periodSeconds: 10
+          timeoutSeconds: 2
+      hostNetwork: true
+      restartPolicy: Always
+      serviceAccountName: kwok-controller

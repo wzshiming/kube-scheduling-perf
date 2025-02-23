@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+  name: monitoring-kube-prometheus-node-network
+  namespace: monitoring
+spec:
+  groups:
+  - name: node-network
+    rules:
+    - alert: NodeNetworkInterfaceFlapping
+      annotations:
+        description: Network interface "{{ $labels.device }}" changing its up status often on node-exporter {{ $labels.namespace }}/{{ $labels.pod }}
+        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/nodenetworkinterfaceflapping
+        summary: Network interface is often changing its status
+      expr: changes(node_network_up{job="node-exporter",device!~"veth.+"}[2m]) > 2
+      for: 2m
+      labels:
+        severity: warning

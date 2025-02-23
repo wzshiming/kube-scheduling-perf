@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    helm.sh/hook-weight: "5"
+  labels:
+    app: volcano-admission-init
+  name: volcano-admission-init
+  namespace: volcano-system
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - command:
+        - ./gen-admission-secret.sh
+        - --service
+        - volcano-admission-service
+        - --namespace
+        - volcano-system
+        - --secret
+        - volcano-admission-secret
+        image: kind-registry:5000/docker.io/volcanosh/vc-webhook-manager:v1.11.0
+        imagePullPolicy: IfNotPresent
+        name: main
+      priorityClassName: system-cluster-critical
+      restartPolicy: Never
+      serviceAccountName: volcano-admission-init
+  ttlSecondsAfterFinished: 60

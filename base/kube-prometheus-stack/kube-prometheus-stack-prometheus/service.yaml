@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kube-prometheus-stack-prometheus
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+    self-monitor: "true"
+  name: monitoring-kube-prometheus-prometheus
+  namespace: monitoring
+spec:
+  ports:
+  - name: http-web
+    port: 9090
+    targetPort: 9090
+  - appProtocol: http
+    name: reloader-web
+    port: 8080
+    targetPort: reloader-web
+  publishNotReadyAddresses: false
+  selector:
+    app.kubernetes.io/name: prometheus
+    operator.prometheus.io/name: monitoring-kube-prometheus-prometheus
+  sessionAffinity: None
+  type: ClusterIP

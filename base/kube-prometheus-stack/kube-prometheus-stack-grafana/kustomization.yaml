@@ -1,0 +1,468 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: monitoring-kube-prometheus-alertmanager-overview
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+  files:
+  - alertmanager-overview.json
+- name: monitoring-kube-prometheus-apiserver
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+  files:
+  - apiserver.json
+- name: monitoring-kube-prometheus-cluster-total
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+  files:
+  - cluster-total.json
+- name: monitoring-kube-prometheus-controller-manager
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "app": "kube-prometheus-stack-grafana"
+  files:
+  - controller-manager.json
+- name: monitoring-kube-prometheus-etcd
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app.kubernetes.io/instance": "monitoring"
+      "release": "monitoring"
+  files:
+  - etcd.json
+- name: monitoring-kube-prometheus-grafana-datasource
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_datasource": "1"
+      "heritage": "Helm"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+  files:
+  - datasource.yaml
+- name: monitoring-kube-prometheus-grafana-overview
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+  files:
+  - grafana-overview.json
+- name: monitoring-kube-prometheus-k8s-coredns
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/instance": "monitoring"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+  files:
+  - k8s-coredns.json
+- name: monitoring-kube-prometheus-k8s-resources-cluster
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+  files:
+  - k8s-resources-cluster.json
+- name: monitoring-kube-prometheus-k8s-resources-multicluster
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+  files:
+  - k8s-resources-multicluster.json
+- name: monitoring-kube-prometheus-k8s-resources-namespace
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "app.kubernetes.io/managed-by": "Helm"
+  files:
+  - k8s-resources-namespace.json
+- name: monitoring-kube-prometheus-k8s-resources-node
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "release": "monitoring"
+  files:
+  - k8s-resources-node.json
+- name: monitoring-kube-prometheus-k8s-resources-pod
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+  files:
+  - k8s-resources-pod.json
+- name: monitoring-kube-prometheus-k8s-resources-workload
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+  files:
+  - k8s-resources-workload.json
+- name: monitoring-kube-prometheus-k8s-resources-workloads-namespace
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+  files:
+  - k8s-resources-workloads-namespace.json
+- name: monitoring-kube-prometheus-kubelet
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+  files:
+  - kubelet.json
+- name: monitoring-kube-prometheus-namespace-by-pod
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "grafana_dashboard": "1"
+      "app": "kube-prometheus-stack-grafana"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+  files:
+  - namespace-by-pod.json
+- name: monitoring-kube-prometheus-namespace-by-workload
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+  files:
+  - namespace-by-workload.json
+- name: monitoring-kube-prometheus-node-cluster-rsrc-use
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+  files:
+  - node-cluster-rsrc-use.json
+- name: monitoring-kube-prometheus-node-rsrc-use
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "release": "monitoring"
+  files:
+  - node-rsrc-use.json
+- name: monitoring-kube-prometheus-nodes
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "grafana_dashboard": "1"
+  files:
+  - nodes.json
+- name: monitoring-kube-prometheus-nodes-aix
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+  files:
+  - nodes-aix.json
+- name: monitoring-kube-prometheus-nodes-darwin
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/managed-by": "Helm"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "grafana_dashboard": "1"
+      "app.kubernetes.io/instance": "monitoring"
+  files:
+  - nodes-darwin.json
+- name: monitoring-kube-prometheus-persistentvolumesusage
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/instance": "monitoring"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+  files:
+  - persistentvolumesusage.json
+- name: monitoring-kube-prometheus-pod-total
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "grafana_dashboard": "1"
+  files:
+  - pod-total.json
+- name: monitoring-kube-prometheus-prometheus
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "grafana_dashboard": "1"
+  files:
+  - prometheus.json
+- name: monitoring-kube-prometheus-proxy
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/version": "69.3.2"
+      "grafana_dashboard": "1"
+      "release": "monitoring"
+  files:
+  - proxy.json
+- name: monitoring-kube-prometheus-scheduler
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/version": "69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app.kubernetes.io/instance": "monitoring"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "grafana_dashboard": "1"
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+  files:
+  - scheduler.json
+- name: monitoring-kube-prometheus-workload-total
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app": "kube-prometheus-stack-grafana"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "app.kubernetes.io/instance": "monitoring"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "grafana_dashboard": "1"
+      "heritage": "Helm"
+      "release": "monitoring"
+  files:
+  - workload-total.json

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: scheduler
+  name: scheduler-plugins-scheduler
+  namespace: coscheduling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: scheduler
+  template:
+    metadata:
+      labels:
+        component: scheduler
+    spec:
+      containers:
+      - args:
+        - --config=/etc/kubernetes/scheduler-config.yaml
+        command:
+        - /kube-scheduler
+        image: kind-registry:5000/registry.k8s.io/scheduler-plugins/kube-scheduler:v0.29.7
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 10259
+            scheme: HTTPS
+          initialDelaySeconds: 15
+        name: scheduler-plugins-scheduler
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 10259
+            scheme: HTTPS
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /etc/kubernetes
+          name: scheduler-config
+          readOnly: true
+      hostNetwork: false
+      hostPID: false
+      serviceAccountName: scheduler-plugins-scheduler
+      volumes:
+      - configMap:
+          name: scheduler-config
+        name: scheduler-config

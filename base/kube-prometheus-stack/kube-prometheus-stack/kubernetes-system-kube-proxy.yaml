@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+  name: monitoring-kube-prometheus-kubernetes-system-kube-proxy
+  namespace: monitoring
+spec:
+  groups:
+  - name: kubernetes-system-kube-proxy
+    rules:
+    - alert: KubeProxyDown
+      annotations:
+        description: KubeProxy has disappeared from Prometheus target discovery.
+        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeproxydown
+        summary: Target disappeared from Prometheus target discovery.
+      expr: absent(up{job="kube-proxy"} == 1)
+      for: 15m
+      labels:
+        severity: critical

@@ -12,16 +12,15 @@ down: \
 	delete-registry 
 
 create-kube-prometheus-stack:
+	kubectl create -k ./base/kube-prometheus-stack/crd
 	kubectl create -k ./base/kube-prometheus-stack
-	kubectl create -k ./base/kube-prometheus-stack/prometheus
-	kubectl create -k ./base/kube-prometheus-stack/alertmanager
 
 create-kube-apiserver-audit-exporter:
 	kubectl create -k ./base/kube-apiserver-audit-exporter
 
 create-kwok:
-	kubectl create -f ./base/kwok/kwok.yaml
-	kubectl create -f ./base/kwok/stage-fast.yaml
+	kubectl create -k ./base/kwok/crd
+	kubectl create -k ./base/kwok
 
 create-ingress:
 	kubectl create -k ./base/ingress
@@ -30,7 +29,7 @@ create-ingress:
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=180s
 
-	kubectl apply -f ./base/routes
+	kubectl apply -k ./base/routes
 
 create-cluster:
 	./hack/kind-with-local-registry.sh 

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yunikorn-admission-controller-service
+    chart: yunikorn-1.6.1
+    heritage: Helm
+    release: yunikorn
+  name: yunikorn-admission-controller-service
+  namespace: yunikorn
+spec:
+  ports:
+  - port: 443
+    targetPort: webhook-api
+  selector:
+    app: yunikorn
+    component: yunikorn-admission-controller
+    release: yunikorn
+  type: ClusterIP

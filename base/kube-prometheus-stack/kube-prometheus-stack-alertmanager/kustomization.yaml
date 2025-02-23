@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- service.yaml
+- alertmanager.yaml
+- servicemonitor.yaml
+
+secretGenerator:
+- name: alertmanager-monitoring-kube-prometheus-alertmanager
+  namespace: monitoring
+  options:
+    disableNameSuffixHash: true
+    labels:
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/part-of": "kube-prometheus-stack"
+      "app.kubernetes.io/version": "69.3.2"
+      "chart": "kube-prometheus-stack-69.3.2"
+      "heritage": "Helm"
+      "release": "monitoring"
+      "app": "kube-prometheus-stack-alertmanager"
+      "app.kubernetes.io/instance": "monitoring"
+  files:
+  - alertmanager.yaml=secret_alertmanager.yaml

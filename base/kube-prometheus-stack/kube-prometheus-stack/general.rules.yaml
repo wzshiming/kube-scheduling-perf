@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+  name: monitoring-kube-prometheus-general.rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: general.rules
+    rules:
+    - alert: TargetDown
+      annotations:
+        description: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
+        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/targetdown
+        summary: One or more targets are unreachable.
+      expr: 100 * (count(up == 0) BY (cluster, job, namespace, service) / count(up) BY (cluster, job, namespace, service)) > 10
+      for: 10m
+      labels:
+        severity: warning
+    - alert: Watchdog
+      annotations:
+        description: 'This is an alert meant to ensure that the entire alerting pipeline is functional. #magic___^_^___line This alert is always firing, therefore it should always be firing in Alertmanager #magic___^_^___line and always fire against a receiver. There are integrations with various notification #magic___^_^___line mechanisms that send a notification when this alert is not firing. For example the #magic___^_^___line "DeadMansSnitch" integration in PagerDuty. #magic___^_^___line '
+        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/watchdog
+        summary: An alert that should always be firing to certify that Alertmanager is working properly.
+      expr: vector(1)
+      labels:
+        severity: none
+    - alert: InfoInhibitor
+      annotations:
+        description: 'This is an alert that is used to inhibit info alerts. #magic___^_^___line By themselves, the info-level alerts are sometimes very noisy, but they are relevant when combined with #magic___^_^___line other alerts. #magic___^_^___line This alert fires whenever there''s a severity="info" alert, and stops firing when another alert with a #magic___^_^___line severity of ''warning'' or ''critical'' starts firing on the same namespace. #magic___^_^___line This alert should be routed to a null receiver and configured to inhibit alerts with severity="info". #magic___^_^___line '
+        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/infoinhibitor
+        summary: Info-level alert inhibition.
+      expr: ALERTS{severity = "info"} == 1 unless on (namespace) ALERTS{alertname != "InfoInhibitor", severity =~ "warning|critical", alertstate="firing"} == 1
+      labels:
+        severity: none

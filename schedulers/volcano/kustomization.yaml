@@ -2,4 +2,43 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- volcano-development.yaml
+- crd
+- volcano-admission
+- volcano-controller
+- volcano-scheduler
+- volcano-admission-init
+- monitoring_namespace.yaml
+- system_namespace.yaml
+- admission_serviceaccount.yaml
+- admission-init_serviceaccount.yaml
+- controllers_serviceaccount.yaml
+- scheduler_serviceaccount.yaml
+- admission-init_role.yaml
+- admission_clusterrole.yaml
+- controllers_clusterrole.yaml
+- scheduler_clusterrole.yaml
+- admission-init-role_rolebinding.yaml
+- admission-role_clusterrolebinding.yaml
+- controllers-role_clusterrolebinding.yaml
+- scheduler-role_clusterrolebinding.yaml
+- admission-service-jobs-mutate_mutatingwebhookconfiguration.yaml
+- admission-service-podgroups-mutate_mutatingwebhookconfiguration.yaml
+- admission-service-pods-mutate_mutatingwebhookconfiguration.yaml
+- admission-service-queues-mutate_mutatingwebhookconfiguration.yaml
+- admission-service-jobs-validate_validatingwebhookconfiguration.yaml
+- admission-service-pods-validate_validatingwebhookconfiguration.yaml
+- admission-service-queues-validate_validatingwebhookconfiguration.yaml
+
+configMapGenerator:
+- name: volcano-admission-configmap
+  namespace: volcano-system
+  options:
+    disableNameSuffixHash: true
+  files:
+  - volcano-admission.conf=admission.conf
+- name: volcano-scheduler-configmap
+  namespace: volcano-system
+  options:
+    disableNameSuffixHash: true
+  files:
+  - volcano-scheduler.conf=scheduler.conf

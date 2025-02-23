@@ -2,6 +2,21 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- namespace.yaml
-- scheduler-config.yaml
-- deploy.yaml
+- scheduler-plugins-controller
+- scheduler
+- coscheduling_namespace.yaml
+- scheduler-plugins-controller_serviceaccount.yaml
+- scheduler-plugins-scheduler_serviceaccount.yaml
+- scheduler-plugins-controller_clusterrole.yaml
+- scheduler-plugins-scheduler_clusterrole.yaml
+- sched-plugins__extension-apiserver-authentication-reader_rolebinding.yaml
+- scheduler-plugins-controller_clusterrolebinding.yaml
+- scheduler-plugins-scheduler_clusterrolebinding.yaml
+
+configMapGenerator:
+- name: scheduler-config
+  namespace: coscheduling
+  options:
+    disableNameSuffixHash: true
+  files:
+  - scheduler-config.yaml

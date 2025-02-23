@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- kwok.x-k8s.io_attaches.yaml
+- kwok.x-k8s.io_clusterattaches.yaml
+- kwok.x-k8s.io_clusterexecs.yaml
+- kwok.x-k8s.io_clusterlogs.yaml
+- kwok.x-k8s.io_clusterportforwards.yaml
+- kwok.x-k8s.io_clusterresourceusages.yaml
+- kwok.x-k8s.io_execs.yaml
+- kwok.x-k8s.io_logs.yaml
+- kwok.x-k8s.io_metrics.yaml
+- kwok.x-k8s.io_portforwards.yaml
+- kwok.x-k8s.io_resourceusages.yaml
+- kwok.x-k8s.io_stages.yaml

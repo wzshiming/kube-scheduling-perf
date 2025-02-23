@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: volcano-controller
+  name: volcano-controllers
+  namespace: volcano-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volcano-controller
+  template:
+    metadata:
+      labels:
+        app: volcano-controller
+    spec:
+      containers:
+      - args:
+        - --logtostderr
+        - --enable-healthz=true
+        - --enable-metrics=true
+        - --leader-elect=false
+        - --kube-api-qps=50
+        - --kube-api-burst=100
+        - --worker-threads=3
+        - --worker-threads-for-gc=5
+        - --worker-threads-for-podgroup=5
+        - -v=4
+        - 2>&1
+        image: kind-registry:5000/docker.io/volcanosh/vc-controller-manager:v1.11.0
+        imagePullPolicy: IfNotPresent
+        name: volcano-controllers
+      priorityClassName: system-cluster-critical
+      serviceAccount: volcano-controllers

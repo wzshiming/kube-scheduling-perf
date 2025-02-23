@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+  name: monitoring-kube-prometheus-k8s.rules.container-memory-working-s
+  namespace: monitoring
+spec:
+  groups:
+  - name: k8s.rules.container_memory_working_set_bytes
+    rules:
+    - expr: |-
+        container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
+        * on (cluster, namespace, pod) group_left(node) topk by (cluster, namespace, pod) (1,
+          max by (cluster, namespace, pod, node) (kube_pod_info{node!=""})
+        )
+      record: node_namespace_pod_container:container_memory_working_set_bytes

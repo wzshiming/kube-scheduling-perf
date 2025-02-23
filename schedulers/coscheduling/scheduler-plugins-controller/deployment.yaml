@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scheduler-plugins-controller
+  name: scheduler-plugins-controller
+  namespace: coscheduling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler-plugins-controller
+  template:
+    metadata:
+      labels:
+        app: scheduler-plugins-controller
+    spec:
+      containers:
+      - image: kind-registry:5000/registry.k8s.io/scheduler-plugins/controller:v0.29.7
+        imagePullPolicy: IfNotPresent
+        name: scheduler-plugins-controller
+      serviceAccountName: scheduler-plugins-controller

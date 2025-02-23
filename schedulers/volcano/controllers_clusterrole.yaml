@@ -1,0 +1,195 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: volcano-controllers
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - batch.volcano.sh
+  resources:
+  - jobs
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+- apiGroups:
+  - batch.volcano.sh
+  resources:
+  - jobs/status
+  - jobs/finalizers
+  verbs:
+  - update
+  - patch
+- apiGroups:
+  - bus.volcano.sh
+  resources:
+  - commands
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods/finalizers
+  verbs:
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - create
+  - delete
+  - update
+- apiGroups:
+  - scheduling.incubator.k8s.io
+  - scheduling.volcano.sh
+  resources:
+  - podgroups
+  - queues
+  - queues/status
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+  - patch
+- apiGroups:
+  - flow.volcano.sh
+  resources:
+  - jobflows
+  - jobtemplates
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+- apiGroups:
+  - flow.volcano.sh
+  resources:
+  - jobflows/status
+  - jobs/finalizers
+  - jobtemplates/status
+  - jobtemplates/finalizers
+  verbs:
+  - update
+  - patch
+- apiGroups:
+  - scheduling.k8s.io
+  resources:
+  - priorityclasses
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - get
+  - create
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  - statefulsets
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - get
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - create
+  - update
+  - watch

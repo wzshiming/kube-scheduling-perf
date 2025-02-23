@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- bus.volcano.sh_commands.yaml
+- flow.volcano.sh_jobflows.yaml
+- batch.volcano.sh_jobs.yaml
+- flow.volcano.sh_jobtemplates.yaml
+- nodeinfo.volcano.sh_numatopologies.yaml
+- scheduling.volcano.sh_podgroups.yaml
+- scheduling.volcano.sh_queues.yaml

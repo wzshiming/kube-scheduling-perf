@@ -1,8 +1,27 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: yunikorn
-
 resources:
+- yunikorn
+- yunikorn-admission-controller-service
 - namespace.yaml
-- deploy.yaml
+- admin_serviceaccount.yaml
+- admission-controller_serviceaccount.yaml
+- admission-controller-role_role.yaml
+- scheduler_role.yaml
+- admission-controller-cluster-role_clusterrole.yaml
+- scheduler_clusterrole.yaml
+- admission-controller-rbac_rolebinding.yaml
+- rbac_rolebinding.yaml
+- admission-controller-cluster-rbac_clusterrolebinding.yaml
+- rbac_clusterrolebinding.yaml
+- rbac-kube-scheduler_clusterrolebinding.yaml
+- rbac-volume-scheduler_clusterrolebinding.yaml
+
+secretGenerator:
+- name: admission-controller-secrets
+  namespace: yunikorn
+  type: Opaque
+  options:
+    disableNameSuffixHash: true
+  files:

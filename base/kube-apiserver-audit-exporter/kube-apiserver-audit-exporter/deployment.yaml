@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: kube-apiserver-audit-exporter
+  name: kube-apiserver-audit-exporter
+  namespace: kube-system
+spec:
+  minReadySeconds: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      component: kube-apiserver-audit-exporter
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        component: kube-apiserver-audit-exporter
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - --audit-log-path
+        - /var/log/kubernetes/kube-apiserver-audit.log
+        image: kind-registry:5000/ghcr.io/wzshiming/kube-apiserver-audit-exporter/kube-apiserver-audit-exporter:v0.0.1
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /var/log/kubernetes
+          name: audit-logs
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
+      terminationGracePeriodSeconds: 0
+      tolerations:
+      - effect: NoExecute
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /var/log/kubernetes
+          type: DirectoryOrCreate
+        name: audit-logs

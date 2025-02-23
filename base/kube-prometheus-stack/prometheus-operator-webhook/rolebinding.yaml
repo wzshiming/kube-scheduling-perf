@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app: kube-prometheus-stack-admission
+    app.kubernetes.io/component: prometheus-operator-webhook
+    app.kubernetes.io/instance: monitoring
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 69.3.2
+    chart: kube-prometheus-stack-69.3.2
+    heritage: Helm
+    release: monitoring
+  name: monitoring-kube-prometheus-admission
+  namespace: monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: monitoring-kube-prometheus-admission
+subjects:
+- kind: ServiceAccount
+  name: monitoring-kube-prometheus-admission
+  namespace: monitoring
