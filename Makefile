@@ -9,7 +9,8 @@ up: \
 
 down: \
 	delete-cluster \
-	delete-registry 
+	delete-registry \
+	cleanup
 
 create-kube-prometheus-stack:
 	kubectl create -k ./base/kube-prometheus-stack/crd
@@ -28,7 +29,7 @@ create-ingress:
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=180s
-
+	sleep 1
 	kubectl apply -k ./base/routes
 
 create-cluster:
@@ -80,3 +81,6 @@ delete-yunikorn:
 
 test-yunikorn:
 	go test -timeout 300s ./test/yunikorn -v
+
+cleanup:
+	rm -rf ./logs/

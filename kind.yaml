@@ -9,7 +9,7 @@ nodes:
   image: localhost:5001/docker.io/kindest/node:v1.32.2
   extraPortMappings:
   - containerPort: 80
-    hostPort: 80
+    hostPort: 8080
     protocol: TCP
   kubeadmConfigPatches:
   - |
@@ -34,6 +34,7 @@ nodes:
         bind-address: 0.0.0.0
     apiServer:
       extraArgs:
+        audit-log-maxsize: '1024'
         audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
         audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
       extraVolumes:

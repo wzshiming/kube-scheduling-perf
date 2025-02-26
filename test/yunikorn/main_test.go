@@ -23,7 +23,12 @@ func TestMain(m *testing.M) {
 	cfg = envconf.NewWithKubeConfig(path)
 	testenv = env.NewWithConfig(cfg)
 
-	r, err = resources.New(cfg.Client().RESTConfig())
+	restConfig := cfg.Client().RESTConfig()
+	restConfig.RateLimiter = nil
+	restConfig.QPS = 1000
+	restConfig.Burst = 1000
+
+	r, err = resources.New(restConfig)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

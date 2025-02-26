@@ -3,6 +3,8 @@ kind: Stage
 metadata:
   name: pod-complete
 spec:
+  delay:
+    durationMilliseconds: 30000
   next:
     statusTemplate: |
       {{ $now := Now }}

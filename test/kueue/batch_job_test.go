@@ -18,7 +18,7 @@ var batchJobYaml string
 
 func TestBatchJob(t *testing.T) {
 	t.Log("create nodes")
-	for range 10 {
+	for range 100 {
 		err := r.Create(t.Context(), utils.Nodes())
 		if err != nil {
 			t.Fatal(err)
