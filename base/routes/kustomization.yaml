@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
 - alertmanager.yaml
 - grafana.yaml
+- grafana-image-renderer.yaml
 - prometheus.yaml

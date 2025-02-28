@@ -180,6 +180,16 @@ spec:
           subPath: provider.yaml
         - mountPath: /etc/grafana/provisioning/datasources
           name: sc-datasources-volume
+      - image: kind-registry:5000/docker.io/grafana/grafana-image-renderer:3.12.1
+        imagePullPolicy: IfNotPresent
+        name: grafana-image-renderer
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       enableServiceLinks: true
       securityContext:
         fsGroup: 472
