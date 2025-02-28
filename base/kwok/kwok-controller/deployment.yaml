@@ -46,7 +46,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        image: kind-registry:5000/registry.k8s.io/kwok/kwok:v0.6.1
+        image: kind-registry:5000/ghcr.io/wzshiming/kwok/kwok:v0.7.0-alpha.6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 10
@@ -76,6 +76,14 @@ spec:
           initialDelaySeconds: 2
           periodSeconds: 10
           timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /root/.kwok/kwok.yaml
+          name: kwok
+          subPath: kwok.yaml
       hostNetwork: true
       restartPolicy: Always
       serviceAccountName: kwok-controller
+      volumes:
+      - configMap:
+          name: kwok
+        name: kwok

@@ -82,5 +82,8 @@ delete-yunikorn:
 test-yunikorn:
 	go test -timeout 300s ./test/yunikorn -v
 
+test-kwok:
+	go test -timeout 3000s ./test/kwok -v
+
 cleanup:
 	rm -rf ./logs/
