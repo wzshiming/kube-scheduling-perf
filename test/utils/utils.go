@@ -7,11 +7,42 @@ import (
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
 )
 
-func Nodes() *corev1.Node {
-	name := envconf.RandomName("kwok-node", 16)
+type option struct {
+	name      string
+	fastReady bool
+}
+
+type Option func(opt *option)
+
+func WithName(name string) Option {
+	return func(opt *option) {
+		opt.name = name
+	}
+}
+
+func WithFastReady() Option {
+	return func(opt *option) {
+		opt.fastReady = true
+	}
+}
+
+func Name(name string) Option {
+	return func(opt *option) {
+		opt.name = name
+	}
+}
+
+func Nodes(opts ...Option) *corev1.Node {
+	var o option
+	for _, opt := range opts {
+		opt(&o)
+	}
+	if o.name == "" {
+		o.name = envconf.RandomName("kwok-node", 16)
+	}
 	n := &corev1.Node{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: name,
+			Name: o.name,
 			Annotations: map[string]string{
 				"node.alpha.kubernetes.io/ttl": "0",
 				"kwok.x-k8s.io/node":           "fake",
@@ -20,7 +51,7 @@ func Nodes() *corev1.Node {
 				"beta.kubernetes.io/arch":       "amd64",
 				"beta.kubernetes.io/os":         "linux",
 				"kubernetes.io/arch":            "amd64",
-				"kubernetes.io/hostname":        name,
+				"kubernetes.io/hostname":        o.name,
 				"kubernetes.io/os":              "linux",
 				"kubernetes.io/role":            "agent",
 				"node-role.kubernetes.io/agent": "",
@@ -36,7 +67,10 @@ func Nodes() *corev1.Node {
 				},
 			},
 		},
-		Status: corev1.NodeStatus{
+	}
+
+	if o.fastReady {
+		n.Status = corev1.NodeStatus{
 			Allocatable: corev1.ResourceList{
 				"cpu":    resource.MustParse("32"),
 				"memory": resource.MustParse("256Gi"),
@@ -59,7 +93,8 @@ func Nodes() *corev1.Node {
 				},
 			},
 			Phase: corev1.NodeRunning,
-		},
+		}
 	}
+
 	return n
 }
