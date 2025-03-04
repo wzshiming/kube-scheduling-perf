@@ -8,3 +8,11 @@ resources:
 - pod-complete.yaml
 - pod-delete.yaml
 - pod-ready.yaml
+
+configMapGenerator:
+- name: kwok
+  namespace: kube-system
+  options:
+    disableNameSuffixHash: true
+  files:
+  - kwok.yaml
