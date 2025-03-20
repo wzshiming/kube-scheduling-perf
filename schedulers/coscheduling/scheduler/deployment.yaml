@@ -20,9 +20,7 @@ spec:
         - --config=/etc/kubernetes/scheduler-config.yaml
         - --kube-api-qps=1000 # <--QPS
         - --kube-api-burst=1000 # <--QPS
-        command:
-        - /kube-scheduler
-        image: kind-registry:5000/registry.k8s.io/scheduler-plugins/kube-scheduler:v0.29.7
+        image: kind-registry:5000/scheduler-plugins/kube-scheduler:v20250319-v0.30.6-2-g54fea8a5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
