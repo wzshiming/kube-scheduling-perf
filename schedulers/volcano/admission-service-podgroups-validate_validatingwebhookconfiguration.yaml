@@ -1,7 +1,8 @@
+
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: volcano-admission-service-pods-validate
+  name: volcano-admission-service-podgroups-validate
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -9,11 +10,11 @@ webhooks:
     service:
       name: volcano-admission-service
       namespace: volcano-system
-      path: /pods/validate
+      path: /podgroups/validate
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: validatepod.volcano.sh
+  name: validatepodgroup.volcano.sh
   namespaceSelector:
     matchExpressions:
     - key: kubernetes.io/metadata.name
@@ -24,13 +25,13 @@ webhooks:
   objectSelector: {}
   rules:
   - apiGroups:
-    - ""
+    - scheduling.volcano.sh
     apiVersions:
-    - v1
+    - v1beta1
     operations:
     - CREATE
     resources:
-    - pods
+    - podgroups
     scope: '*'
   sideEffects: NoneOnDryRun
   timeoutSeconds: 10

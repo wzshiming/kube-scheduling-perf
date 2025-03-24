@@ -10,24 +10,22 @@ resources:
 - monitoring_namespace.yaml
 - system_namespace.yaml
 - admission_serviceaccount.yaml
-- admission-init_serviceaccount.yaml
 - controllers_serviceaccount.yaml
 - scheduler_serviceaccount.yaml
-- admission-init_role.yaml
 - admission_clusterrole.yaml
 - controllers_clusterrole.yaml
 - scheduler_clusterrole.yaml
-- admission-init-role_rolebinding.yaml
 - admission-role_clusterrolebinding.yaml
 - controllers-role_clusterrolebinding.yaml
 - scheduler-role_clusterrolebinding.yaml
-- admission-service-jobs-mutate_mutatingwebhookconfiguration.yaml
-- admission-service-podgroups-mutate_mutatingwebhookconfiguration.yaml
-- admission-service-pods-mutate_mutatingwebhookconfiguration.yaml
 - admission-service-queues-mutate_mutatingwebhookconfiguration.yaml
+- admission-service-jobs-mutate_mutatingwebhookconfiguration.yaml
 - admission-service-jobs-validate_validatingwebhookconfiguration.yaml
-- admission-service-pods-validate_validatingwebhookconfiguration.yaml
 - admission-service-queues-validate_validatingwebhookconfiguration.yaml
+- admission-service-podgroups-validate_validatingwebhookconfiguration.yaml
+- admission-init_serviceaccount.yaml
+- admission-init_role.yaml
+- admission-init-role_rolebinding.yaml
 
 configMapGenerator:
 - name: volcano-admission-configmap

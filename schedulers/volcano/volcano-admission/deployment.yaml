@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,9 +16,11 @@ spec:
       labels:
         app: volcano-admission
     spec:
+      serviceAccount: volcano-admission
+      priorityClassName: system-cluster-critical
       containers:
       - args:
-        - --enabled-admission=/jobs/mutate,/jobs/validate,/podgroups/mutate,/pods/validate,/pods/mutate,/queues/mutate,/queues/validate
+        - --enabled-admission=/jobs/mutate,/jobs/validate,/podgroups/validate,/queues/mutate,/queues/validate
         - --tls-cert-file=/admission.local.config/certificates/tls.crt
         - --tls-private-key-file=/admission.local.config/certificates/tls.key
         - --ca-cert-file=/admission.local.config/certificates/ca.crt
@@ -31,7 +34,7 @@ spec:
         - --port=8443
         - -v=4
         - 2>&1
-        image: kind-registry:5000/docker.io/volcanosh/vc-webhook-manager:v1.11.0
+        image: kind-registry:5000/docker.io/volcanosh/vc-webhook-manager:v1.12.0-alpha.0
         imagePullPolicy: IfNotPresent
         name: admission
         volumeMounts:
@@ -40,14 +43,12 @@ spec:
           readOnly: true
         - mountPath: /admission.local.config/configmap
           name: admission-config
-      priorityClassName: system-cluster-critical
-      serviceAccount: volcano-admission
-      terminationGracePeriodSeconds: 1
       volumes:
       - name: admission-certs
         secret:
           defaultMode: 420
           secretName: volcano-admission-secret
-      - configMap:
+      - name: admission-config
+        configMap:
           name: volcano-admission-configmap
-        name: admission-config
+      terminationGracePeriodSeconds: 1

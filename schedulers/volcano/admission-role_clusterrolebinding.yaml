@@ -1,12 +1,13 @@
-apiVersion: rbac.authorization.k8s.io/v1
+
 kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: volcano-admission-role
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: volcano-admission
 subjects:
 - kind: ServiceAccount
   name: volcano-admission
   namespace: volcano-system
+roleRef:
+  kind: ClusterRole
+  name: volcano-admission
+  apiGroup: rbac.authorization.k8s.io

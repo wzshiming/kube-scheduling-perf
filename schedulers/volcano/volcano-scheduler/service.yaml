@@ -1,3 +1,4 @@
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,16 +6,16 @@ metadata:
     prometheus.io/path: /metrics
     prometheus.io/port: "8080"
     prometheus.io/scrape: "true"
-  labels:
-    app: volcano-scheduler
   name: volcano-scheduler-service
   namespace: volcano-system
+  labels:
+    app: volcano-scheduler
 spec:
   ports:
-  - name: metrics
-    port: 8080
+  - port: 8080
     protocol: TCP
     targetPort: 8080
+    name: "metrics"
   selector:
     app: volcano-scheduler
   type: ClusterIP

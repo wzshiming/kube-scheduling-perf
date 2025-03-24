@@ -1,10 +1,11 @@
-apiVersion: apps/v1
+
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  labels:
-    app: volcano-scheduler
   name: volcano-scheduler
   namespace: volcano-system
+  labels:
+    app: volcano-scheduler
 spec:
   replicas: 1
   selector:
@@ -15,8 +16,12 @@ spec:
       labels:
         app: volcano-scheduler
     spec:
+      serviceAccount: volcano-scheduler
+      priorityClassName: system-cluster-critical
       containers:
-      - args:
+      - name: volcano-scheduler
+        image: kind-registry:5000/docker.io/volcanosh/vc-scheduler:v1.12.0-alpha.0
+        args:
         - --logtostderr
         - --scheduler-conf=/volcano.scheduler/volcano-scheduler.conf
         - --enable-healthz=true
@@ -25,27 +30,23 @@ spec:
         - --kube-api-qps=1000
         - --kube-api-burst=1000
         - --schedule-period=1s
-        - --node-worker-threads=20
+        - --node-worker-threads=100
         - -v=3
         - 2>&1
         env:
         - name: DEBUG_SOCKET_DIR
           value: /tmp/klog-socks
-        image: kind-registry:5000/docker.io/volcanosh/vc-scheduler:v1.11.0
         imagePullPolicy: IfNotPresent
-        name: volcano-scheduler
         volumeMounts:
-        - mountPath: /volcano.scheduler
-          name: scheduler-config
-        - mountPath: /tmp/klog-socks
-          name: klog-sock
-      priorityClassName: system-cluster-critical
-      serviceAccount: volcano-scheduler
-      terminationGracePeriodSeconds: 1
+        - name: scheduler-config
+          mountPath: /volcano.scheduler
+        - name: klog-sock
+          mountPath: /tmp/klog-socks
       volumes:
-      - configMap:
+      - name: scheduler-config
+        configMap:
           name: volcano-scheduler-configmap
-        name: scheduler-config
-      - hostPath:
+      - name: klog-sock
+        hostPath:
           path: /tmp/klog-socks
-        name: klog-sock
+      terminationGracePeriodSeconds: 1
