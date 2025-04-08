@@ -8,7 +8,6 @@ KUBECONFIG = ./kubeconfig.yaml
 up: \
 	create-cluster
 	make wait
-	-make chmod
 	make -j 2 \
 		create-ingress \
 		create-kube-prometheus-stack
@@ -16,7 +15,6 @@ up: \
 
 .PHONY: start-export
 start-export:
-	./patch/deployment.patch.yaml.gen.sh > ./patch/deployment.patch.yaml
 	KUBECONFIG=$(KUBECONFIG) kubectl kustomize ./patch | ../../hack/local-registry-with-load-images.sh
 	KUBECONFIG=$(KUBECONFIG) kubectl create -k ./patch
 
@@ -56,13 +54,8 @@ create-cluster:
 
 .PHONY: delete-cluster
 delete-cluster:
-	-make chmod
 	KUBECONFIG=$(KUBECONFIG) KIND_CLUSTER_NAME=$(KIND_CLUSTER_NAME) kind delete cluster
 	-rm $(KUBECONFIG)
-
-.PHONE: chmod
-chmod:
-	docker exec -i $(KIND_CLUSTER_NAME)-control-plane sh -c 'chmod 0666 /var/log/kubernetes/*'
 
 .PHONY: wait
 wait:
