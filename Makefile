@@ -41,8 +41,9 @@ GO_IMAGE ?= $(IMAGE_PREFIX)docker.io/library/golang:1.24
 GOPROXY ?= https://proxy.golang.org,direct
 GOOS ?= $(shell uname -s | tr '[:upper:]' '[:lower:]')
 GO_IN_DOCKER = docker run --rm --network host \
+	-u $(shell id -u):$(shell id -g) \
 	-v $(shell pwd):/workspace/ -w /workspace/ \
-	-e GOOS=$(GOOS) -e CGO_ENABLED=0 -e GOPATH=/workspace/gopath/ -e GOPROXY=$(GOPROXY) $(GO_IMAGE)
+	-e GOOS=$(GOOS) -e CGO_ENABLED=0 -e GOPATH=/workspace/gopath/ -e GOPROXY=$(GOPROXY) -e GOCACHE=/workspace/.cache $(GO_IMAGE)
 
 TEST_ENVS = \
 		NODES_SIZE=$(NODES_SIZE) \
@@ -67,7 +68,7 @@ TEST_ENVS = \
 		GANG=$(GANG)
 
 .PHONY: default
-default:
+default: ensure-directories
 	make serial-test \
 		RESULT_RECENT_DURATION_SECONDS=250 TEST_TIMEOUT_SECONDS=350 \
 		NODES_SIZE=1000 \
@@ -101,6 +102,10 @@ default:
 		RESULT_RECENT_DURATION_SECONDS=300 TEST_TIMEOUT_SECONDS=400 \
 		NODES_SIZE=1000 GANG=true \
 		QUEUES_SIZE=1  JOBS_SIZE_PER_QUEUE=1      PODS_SIZE_PER_JOB=10000
+
+.PHONY: ensure-directories
+ensure-directories:
+	./hack/ensure-directories.sh
 
 define test-scheduler
 
@@ -185,7 +190,7 @@ down:
 		end-overview
 
 .PHONY: serial-test
-serial-test: bin/kind
+serial-test: ensure-directories bin/kind
 	$(foreach sched,$(SCHEDULERS), \
 		make prepare-$(sched); \
 		make start-$(sched); \
