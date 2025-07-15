@@ -43,7 +43,7 @@ GOOS ?= $(shell uname -s | tr '[:upper:]' '[:lower:]')
 GO_IN_DOCKER = docker run --rm --network host \
 	-u $(shell id -u):$(shell id -g) \
 	-v $(shell pwd):/workspace/ -w /workspace/ \
-	-e GOOS=$(GOOS) -e CGO_ENABLED=0 -e GOPATH=/workspace/gopath/ -e GOPROXY=$(GOPROXY) -e GOCACHE=/workspace/.cache $(GO_IMAGE)
+	-e GOOS=$(GOOS) -e CGO_ENABLED=0 -e GOPATH=/workspace/gopath/ -e GOPROXY=$(GOPROXY) -e GOCACHE=/workspace/go-build $(GO_IMAGE)
 
 TEST_ENVS = \
 		NODES_SIZE=$(NODES_SIZE) \

@@ -20,7 +20,7 @@ ensure_directory() {
     mkdir -p "$dir"
     
     # Check ownership
-    local owner=$(stat -c '%U' "$dir" 2>/dev/null || echo "none")
+    local owner=$(ls -ld "$dir" 2>/dev/null | awk '{print $3}' || echo "none")
     
     if [[ "$owner" == "root" ]]; then
         echo "Fixing ownership of root-owned directory: $dir"
@@ -28,7 +28,7 @@ ensure_directory() {
     fi
     
     chmod 755 "$dir"
-    echo "Ensured directory: $dir (owner: $(stat -c '%U:%G' "$dir"))"
+    echo "Ensured directory: $dir (owner: $(ls -ld "$dir" | awk '{print $3":"$4}'))"
 }
 
 # Create logs directory
@@ -39,6 +39,9 @@ ensure_directory "${ROOT_DIR}/bin"
 
 # Create gopath directory
 ensure_directory "${ROOT_DIR}/gopath"
+
+# Create go-build directory
+ensure_directory "${ROOT_DIR}/go-build"
 
 # Create registry-data directory
 ensure_directory "${ROOT_DIR}/registry-data"
