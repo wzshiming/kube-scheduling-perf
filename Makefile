@@ -26,8 +26,8 @@ test-kwok: bin/test-kwok
 up: bin/kind
 	make -j up-overview up-kwok
 	make -j wait-overview wait-kwok
+	true > ./logs/kube-apiserver-audit.kwok.log
 	make start-overview
-
 	make test-kwok
 
 .PHONY: down

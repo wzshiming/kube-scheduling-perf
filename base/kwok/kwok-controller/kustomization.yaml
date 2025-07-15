@@ -7,3 +7,4 @@ resources:
 - clusterrolebinding.yaml
 - service.yaml
 - deployment.yaml
+- flow_schema.yaml

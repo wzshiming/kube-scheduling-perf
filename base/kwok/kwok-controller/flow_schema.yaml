@@ -1,0 +1,23 @@
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+kind: FlowSchema
+metadata:
+  name: kwok-controller
+spec:
+  priorityLevelConfiguration:
+    name: exempt
+  matchingPrecedence: 1000
+  rules:
+  - resourceRules:
+    - apiGroups:
+      - "*"
+      namespaces:
+      - "*"
+      resources:
+      - "*"
+      verbs:
+      - "*"
+    subjects:
+    - kind: ServiceAccount
+      serviceAccount:
+        name: kwok-controller
+        namespace: kube-system

@@ -1,6 +1,9 @@
 apiVersion: config.kwok.x-k8s.io/v1alpha1
 kind: KwokConfiguration
 options:
-  nodeLeaseParallelism: 4
-  podPlayStageParallelism: 4
-  nodePlayStageParallelism: 4
+  nodeLeaseParallelism: 32
+  podPlayStageParallelism: 32
+  nodePlayStageParallelism: 32
+  podsOnNodeSyncParallelism: 32
+  enablePodsOnNodeSyncListPager: false
+  enablePodsOnNodeSyncStreamWatch: true

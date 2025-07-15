@@ -10,30 +10,17 @@ nodes:
   kubeadmConfigPatches:
   - |-
     kind: ClusterConfiguration
-    controllerManager:
-      extraArgs:
-        kube-api-qps: "1000" # <--QPS
-        kube-api-burst: "1000" # <--QPS
-        node-monitor-grace-period: "7200s"
-        node-monitor-period: "3600s"
-        concurrent-job-syncs: "100"
     etcd:
       local:
         extraArgs:
           quota-backend-bytes: "8589934592"
           auto-compaction-mode: revision
           auto-compaction-retention: "1000"
-    scheduler:
-      extraArgs:
-        kube-api-qps: "1000" # <--QPS
-        kube-api-burst: "1000" # <--QPS
     apiServer:
       extraArgs:
         audit-log-maxsize: '10240'
         audit-log-path: /var/log/kubernetes/kube-apiserver-audit.kwok.log
         audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
-        max-mutating-requests-inflight: '20000'
-        max-requests-inflight: '20000'
       extraVolumes:
       - name: audit-policies
         hostPath: /etc/kubernetes/policies
